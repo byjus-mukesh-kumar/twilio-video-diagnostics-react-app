@@ -4,9 +4,12 @@ import express from 'express';
 import path from 'path';
 import { ServerlessFunction } from './types';
 
-const PORT = process.env.PORT ?? 8081;
+ const PORT = process.env.PORT ?? 8081;
+
+//const PORT = 3001;
 
 const app = express();
+// app.listen(3001);
 app.use(express.json());
 
 // This server reuses the serverless endpoints from /serverless/functions/app, which is used when the "npm run serverless:deploy" command is run.

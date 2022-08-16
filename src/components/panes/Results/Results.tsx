@@ -7,6 +7,7 @@ import { QualityScore } from '../Quality/Quality';
 import { SmallError } from '../../../icons/SmallError';
 import SomeFailed from './SomeFailed.png';
 import TestsPassed from './TestsPassed.png';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -80,6 +81,36 @@ export function Results() {
   const testsPassed = totalQualityScore === QualityScore.Excellent || totalQualityScore === QualityScore.Good;
   const qualityScore = QualityScore[totalQualityScore].toLowerCase();
 
+  const sendTheResult = () => {
+    let testValue = downloadFinalTestResults();
+    const testResults = {
+      DeviceAndNetworkSetup: qualityScore,
+      Connectivity: testsPassed ? 'All tests passed!' : 'Some tests failed',
+      QualityAndPerformance: testsPassed ? `${qualityScore === 'excellent' ? ' good' : ' ok'}` : qualityScore,
+      Results: testsPassed
+        ? `Awesome! Your expected call quality is ${qualityScore} and overall performance looks`
+        : ` Your overall score is ${qualityScore} which means that your connection isn't good enough to run video properly. Try out these tips and rerun the test`,
+    };
+
+    const finalResults = {
+      ...testResults,
+      ...testValue,
+    };
+    // const link = document.createElement('a');
+    // link.download = 'test_result.json';
+    // link.href = URL.createObjectURL(
+    //   new Blob([JSON.stringify(testResults, null, 2)], {
+    //     type: 'application/json',
+    //   })
+    // );
+    // link.click();
+
+    //Data sending to main Ui using postMessage method
+
+    const res = JSON.stringify(finalResults, null, 2);
+    window.parent.postMessage(res, 'http://localhost:3000');
+  };
+
   return (
     <>
       <Container>
@@ -103,7 +134,7 @@ export function Results() {
             )}
 
             <div className={classes.buttonContainer}>
-              <Button
+              {/* <Button
                 variant="contained"
                 color="primary"
                 className={classes.downloadButton}
@@ -111,7 +142,12 @@ export function Results() {
               >
                 <DownloadIcon />
                 Download report results
+              </Button> */}
+              <Button variant="contained" color="primary" className={classes.downloadButton} onClick={sendTheResult}>
+                <DownloadIcon />
+                Get Diagnostic Results
               </Button>
+
               <Button variant="outlined" className={classes.restartButton} onClick={() => window.location.reload()}>
                 Restart test
               </Button>

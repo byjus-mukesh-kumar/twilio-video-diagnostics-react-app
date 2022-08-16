@@ -91,7 +91,7 @@ type AppStateContextType = {
   dispatch: React.Dispatch<ACTIONTYPE>;
   nextPane: () => void;
   userAgentInfo: UAParser.IResult;
-  downloadFinalTestResults: () => void;
+  downloadFinalTestResults: () => object;
 };
 
 export const initialState = {
@@ -345,14 +345,15 @@ export const AppStateProvider: React.FC = ({ children }) => {
       videoTestResults: state.videoInputTestReport,
     };
 
-    const link = document.createElement('a');
-    link.download = 'test_results.json';
-    link.href = URL.createObjectURL(
-      new Blob([JSON.stringify(finalTestResults, null, 2)], {
-        type: 'application/json',
-      })
-    );
-    link.click();
+    // const link = document.createElement('a');
+    // link.download = 'test_results.json';
+    // link.href = URL.createObjectURL(
+    //   new Blob([JSON.stringify(finalTestResults, null, 2)], {
+    //     type: 'application/json',
+    //   })
+    // );
+    // link.click();
+    return finalTestResults;
   };
 
   const nextPane = useCallback(() => {
